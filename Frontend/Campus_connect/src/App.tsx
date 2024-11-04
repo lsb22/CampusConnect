@@ -3,6 +3,7 @@ import Navbar from "./components/Navbar";
 import { Grid, GridItem, Show } from "@chakra-ui/react";
 import SidePanel from "./components/SidePanel";
 import TypeMessage from "./components/TypeMessage";
+import socket from "./services/Socket";
 
 function App() {
   return (
