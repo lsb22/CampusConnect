@@ -6,8 +6,8 @@ import { ChakraProvider } from "@chakra-ui/react";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    {/* <ChakraProvider value={undefined} children={undefined}> */}
-    <App />
-    {/* </ChakraProvider> */}
+    <ChakraProvider>
+      <App />
+    </ChakraProvider>
   </StrictMode>
 );
