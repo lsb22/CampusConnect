@@ -1,35 +1,18 @@
 import "./App.css";
-import Navbar from "./components/Navbar";
-import { Grid, GridItem, Show } from "@chakra-ui/react";
-import SidePanel from "./components/SidePanel";
-import TypeMessage from "./components/TypeMessage";
+import { Box } from "@chakra-ui/react";
 import socket from "./services/Socket";
+import HomePage from "./components/HomePage";
+import ChatPage from "./components/ChatPage";
+import { Route, Routes } from "react-router-dom";
 
 function App() {
   return (
-    <Grid
-      templateAreas={{
-        lg: `"sidePanel nav" "sidePanel main" "sidePanel message"`,
-        base: `"nav" "main" "message"`,
-      }}
-      templateRows={{ lg: "60px 1fr 60px", base: "60px 1fr 60px" }}
-      gap={3}
-      p={3}
-      height="100vh"
-    >
-      <GridItem area={"nav"} bg="rgb(6,6,7,0.18)" borderRadius="10px">
-        <Navbar />
-      </GridItem>
-      <Show above={"lg"}>
-        <GridItem area={"sidePanel"} bg="rgb(6,6,7,0.18)" borderRadius="10px">
-          <SidePanel />
-        </GridItem>
-      </Show>
-      <GridItem area={"main"}>Main</GridItem>
-      <GridItem area={"message"} borderRadius="10px">
-        <TypeMessage />
-      </GridItem>
-    </Grid>
+    <Box>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route path="/chatpage" element={<ChatPage />} />
+      </Routes>
+    </Box>
   );
 }
 
