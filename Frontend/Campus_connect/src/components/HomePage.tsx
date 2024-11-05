@@ -7,14 +7,20 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { useState } from "react";
+import { Socket } from "socket.io-client";
 import { useNavigate } from "react-router-dom";
 
-const HomePage = () => {
+interface Props {
+  socket: Socket;
+}
+
+const HomePage = ({ socket }: Props) => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
 
   const handleClick = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    socket.connect();
     if (username) navigate("/chatpage");
     else alert("Enter valid username!!!");
   };

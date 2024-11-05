@@ -9,7 +9,7 @@ function App() {
   return (
     <Box>
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route path="/" element={<HomePage socket={socket} />} />
         <Route path="/chatpage" element={<ChatPage />} />
       </Routes>
     </Box>

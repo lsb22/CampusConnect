@@ -1,10 +1,29 @@
 import { Box, Input } from "@chakra-ui/react";
+import { useState } from "react";
 
-const TypeMessage = () => {
+interface Props {
+  sendMessage: (message: string) => void;
+}
+
+const TypeMessage = ({ sendMessage }: Props) => {
+  const [message, setMessage] = useState("");
+
   return (
-    <Box>
-      <Input height="60px" placeholder="Type Message" variant="filled" />
-    </Box>
+    <form
+      onSubmit={(e) => {
+        e.preventDefault();
+        sendMessage(message);
+        setMessage("");
+      }}
+    >
+      <Input
+        height="60px"
+        placeholder="Type Message"
+        variant="filled"
+        value={message}
+        onChange={(e) => setMessage(e.target.value)}
+      />
+    </form>
   );
 };
 
