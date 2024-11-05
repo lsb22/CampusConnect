@@ -1,7 +1,8 @@
 import { Box, Flex, Text } from "@chakra-ui/react";
+import { MessageStruct } from "./ChatPage";
 
 interface Props {
-  messages: string[];
+  messages: MessageStruct[];
 }
 
 const ChatBody = ({ messages }: Props) => {
@@ -21,7 +22,7 @@ const ChatBody = ({ messages }: Props) => {
             py={2}
             borderRadius={10}
           >
-            {message}
+            {message.text}
           </Text>
         </Flex>
       ))}

@@ -1,6 +1,20 @@
 import { VStack, Text, Box } from "@chakra-ui/react";
+import { useEffect, useState } from "react";
+import socket from "../services/Socket";
+
+interface UserStruct {
+  username: string;
+  socketId: string;
+}
 
 const SidePanel = () => {
+  const [users, setUsers] = useState<UserStruct[]>([]);
+
+  useEffect(() => {
+    socket.on("newUserLogin", (data: UserStruct[]) => {
+      setUsers(data);
+    });
+  }, [users, socket]);
   return (
     <VStack alignItems="start" pl={4}>
       <Text fontSize="2rem" mb={5}>
@@ -13,9 +27,11 @@ const SidePanel = () => {
           </Text>
         </Box>
         <Box fontSize="1.4rem">
-          <Box mb={2}>User-1</Box>
-          <Box mb={2}>User-2</Box>
-          <Box mb={2}>User-3</Box>
+          {users.map((user, idx) => (
+            <Box key={idx} mb={3}>
+              {user.username}
+            </Box>
+          ))}
         </Box>
       </VStack>
     </VStack>

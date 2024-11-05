@@ -20,9 +20,12 @@ const HomePage = ({ socket }: Props) => {
 
   const handleClick = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    socket.connect();
-    if (username) navigate("/chatpage");
-    else alert("Enter valid username!!!");
+    if (username) {
+      socket.connect();
+      localStorage.setItem("username", username);
+      socket.emit("newUser", { username, socketId: socket.id });
+      navigate("/chatpage");
+    } else alert("Enter valid username!!!");
   };
 
   return (

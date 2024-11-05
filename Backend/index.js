@@ -13,8 +13,20 @@ const io = require("socket.io")(server, {
   },
 });
 
+let users = [];
+
 io.on("connection", (socket) => {
   console.log(`user ${socket.id} connected!!!`);
+
+  socket.on("newUser", (data) => {
+    users.push(data);
+    io.emit("newUserLogin", users);
+  });
+
+  socket.on("message", (data) => {
+    io.emit("messageResponse", data);
+  });
+
   socket.on("disconnect", () => {
     console.log("user disconnected");
   });

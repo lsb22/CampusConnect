@@ -1,12 +1,31 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import ChatBody from "./ChatBody";
 import Navbar from "./Navbar";
 import SidePanel from "./SidePanel";
 import TypeMessage from "./TypeMessage";
 import { Grid, GridItem, Show } from "@chakra-ui/react";
+import { Socket } from "socket.io-client";
 
-const ChatPage = () => {
-  const [messages, setMessages] = useState([] as string[]);
+interface Props {
+  socket: Socket;
+}
+
+export interface MessageStruct {
+  text: string;
+  username: string;
+  socketId: string;
+  id: string;
+}
+
+const ChatPage = ({ socket }: Props) => {
+  const [messages, setMessages] = useState<MessageStruct[]>([]);
+
+  useEffect(() => {
+    socket.on("messageResponse", (data: MessageStruct) => {
+      setMessages([...messages, data]);
+    });
+  }, [messages, socket]);
+
   return (
     <Grid
       templateAreas={{
@@ -30,9 +49,7 @@ const ChatPage = () => {
         <ChatBody messages={messages} />
       </GridItem>
       <GridItem area={"message"} borderRadius="10px">
-        <TypeMessage
-          sendMessage={(message) => setMessages([...messages, message])}
-        />
+        <TypeMessage socket={socket} />
       </GridItem>
     </Grid>
   );

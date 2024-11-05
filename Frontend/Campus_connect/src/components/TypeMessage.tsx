@@ -1,21 +1,29 @@
-import { Box, Input } from "@chakra-ui/react";
+import { Input } from "@chakra-ui/react";
 import { useState } from "react";
+import { Socket } from "socket.io-client";
 
 interface Props {
-  sendMessage: (message: string) => void;
+  socket: Socket;
 }
 
-const TypeMessage = ({ sendMessage }: Props) => {
+const TypeMessage = ({ socket }: Props) => {
   const [message, setMessage] = useState("");
 
+  const handleMessageSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (message.trim() && localStorage.getItem("username")) {
+      socket.emit("message", {
+        text: message,
+        userName: localStorage.getItem("username"),
+        socketId: socket.id,
+        id: `${socket.id}${Math.random()}`,
+      });
+    }
+    setMessage("");
+  };
+
   return (
-    <form
-      onSubmit={(e) => {
-        e.preventDefault();
-        sendMessage(message);
-        setMessage("");
-      }}
-    >
+    <form onSubmit={handleMessageSubmit}>
       <Input
         height="60px"
         placeholder="Type Message"

@@ -10,7 +10,7 @@ function App() {
     <Box>
       <Routes>
         <Route path="/" element={<HomePage socket={socket} />} />
-        <Route path="/chatpage" element={<ChatPage />} />
+        <Route path="/chatpage" element={<ChatPage socket={socket} />} />
       </Routes>
     </Box>
   );
