@@ -12,7 +12,7 @@ interface Props {
 
 export interface MessageStruct {
   text: string;
-  username: string;
+  userName: string;
   socketId: string;
   id: string;
 }

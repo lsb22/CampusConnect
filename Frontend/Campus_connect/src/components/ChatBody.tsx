@@ -1,4 +1,4 @@
-import { Box, Flex, Text } from "@chakra-ui/react";
+import { Box, Flex, Text, VStack } from "@chakra-ui/react";
 import { MessageStruct } from "./ChatPage";
 
 interface Props {
@@ -11,19 +11,41 @@ const ChatBody = ({ messages }: Props) => {
       {messages.map((message, idx) => (
         <Flex
           flex="1fr"
-          justifyContent={idx % 2 === 0 ? "end" : "start"}
+          justifyContent={
+            message.userName === localStorage.getItem("username")
+              ? "end"
+              : "start"
+          }
           key={idx}
-          mt={5}
+          mt={10}
         >
-          <Text
-            fontSize="1.3rem"
-            bgColor="teal"
-            px={10}
-            py={2}
-            borderRadius={10}
+          <VStack
+            alignItems={
+              message.userName === localStorage.getItem("username")
+                ? "end"
+                : "start"
+            }
           >
-            {message.text}
-          </Text>
+            <Text p={2}>
+              {message.userName === localStorage.getItem("username")
+                ? "You"
+                : message.userName}
+            </Text>
+            <Text
+              fontSize="1.3rem"
+              bgColor={
+                message.userName === localStorage.getItem("username")
+                  ? "teal"
+                  : "lightcoral"
+              }
+              px={10}
+              py={2}
+              borderRadius={10}
+              maxWidth="600px"
+            >
+              {message.text}
+            </Text>
+          </VStack>
         </Flex>
       ))}
     </Box>
