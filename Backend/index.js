@@ -1,5 +1,7 @@
-const express = require("express");
+require("dotenv").config();
 const cors = require("cors");
+const express = require("express");
+const mongoose = require("mongoose");
 
 const app = express();
 
@@ -39,3 +41,12 @@ app.get("/", (req, res) => {
 server.listen(3000, () => {
   console.log("server is running on 3000");
 });
+
+// database actions
+
+const connectionString = require("./password.js").str;
+
+mongoose
+  .connect(connectionString)
+  .then(() => console.log("database connected successfully"))
+  .catch((err) => console.log(err));
