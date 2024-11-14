@@ -1,11 +1,13 @@
 import { Box, Flex, Text, VStack } from "@chakra-ui/react";
 import { MessageStruct } from "./ChatPage";
+import useMessageStore from "../store/LatestMessagesStore";
 
 interface Props {
   messages: MessageStruct[];
 }
 
 const ChatBody = ({ messages }: Props) => {
+  const { messages: LatestMessages } = useMessageStore();
   return (
     <Box overflowY="auto">
       {messages.map((message, idx) => (

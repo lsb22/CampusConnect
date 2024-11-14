@@ -9,6 +9,7 @@ import {
 import { useState } from "react";
 import { Socket } from "socket.io-client";
 import { useNavigate } from "react-router-dom";
+import useMessageStore from "../store/LatestMessagesStore";
 
 interface Props {
   socket: Socket;
@@ -17,6 +18,7 @@ interface Props {
 const HomePage = ({ socket }: Props) => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
+  const { insert } = useMessageStore();
 
   const handleClick = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -24,6 +26,9 @@ const HomePage = ({ socket }: Props) => {
       socket.connect();
       localStorage.setItem("username", username);
       socket.emit("newUser", { username, socketId: socket.id });
+      socket.on("prevMessages", (data) => {
+        insert(data);
+      });
       navigate("/chatpage");
     } else alert("Enter valid username!!!");
   };
