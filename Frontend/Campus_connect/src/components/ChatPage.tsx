@@ -5,6 +5,7 @@ import SidePanel from "./SidePanel";
 import TypeMessage from "./TypeMessage";
 import { Grid, GridItem, Show } from "@chakra-ui/react";
 import { Socket } from "socket.io-client";
+import useMessageStore from "../store/LatestMessagesStore";
 
 interface Props {
   socket: Socket;
@@ -19,6 +20,7 @@ export interface MessageStruct {
 
 const ChatPage = ({ socket }: Props) => {
   const [messages, setMessages] = useState<MessageStruct[]>([]);
+  const { messages: LatestMessages } = useMessageStore();
 
   useEffect(() => {
     socket.on("messageResponse", (data: MessageStruct) => {
@@ -46,6 +48,11 @@ const ChatPage = ({ socket }: Props) => {
         </GridItem>
       </Show>
       <GridItem area={"main"} overflowY="scroll">
+        <ChatBody
+          messages={LatestMessages.map(
+            (_, idx, arr) => arr[arr.length - idx - 1]
+          )}
+        />
         <ChatBody messages={messages} />
       </GridItem>
       <GridItem area={"message"} borderRadius="10px">

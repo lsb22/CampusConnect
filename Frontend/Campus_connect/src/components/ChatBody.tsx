@@ -1,13 +1,11 @@
 import { Box, Flex, Text, VStack } from "@chakra-ui/react";
 import { MessageStruct } from "./ChatPage";
-import useMessageStore from "../store/LatestMessagesStore";
 
 interface Props {
   messages: MessageStruct[];
 }
 
 const ChatBody = ({ messages }: Props) => {
-  const { messages: LatestMessages } = useMessageStore();
   return (
     <Box overflowY="auto">
       {messages.map((message, idx) => (
@@ -28,7 +26,7 @@ const ChatBody = ({ messages }: Props) => {
                 : "start"
             }
           >
-            <Text p={2}>
+            <Text p={1}>
               {message.userName === localStorage.getItem("username")
                 ? "You"
                 : message.userName}
