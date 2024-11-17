@@ -52,8 +52,9 @@ const ChatPage = ({ socket }: Props) => {
           messages={LatestMessages.map(
             (_, idx, arr) => arr[arr.length - idx - 1]
           )}
+          socket={socket}
         />
-        <ChatBody messages={messages} />
+        <ChatBody messages={messages} socket={socket} />
       </GridItem>
       <GridItem area={"message"} borderRadius="10px">
         <TypeMessage socket={socket} />

@@ -11,10 +11,10 @@ const TypeMessage = ({ socket }: Props) => {
 
   const handleMessageSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (message.trim() && localStorage.getItem("username")) {
+    if (message.trim() && socket.username) {
       socket.emit("message", {
         text: message,
-        userName: localStorage.getItem("username"),
+        userName: socket.username,
         socketId: socket.id,
         id: `${socket.id}${Math.random()}`,
       });

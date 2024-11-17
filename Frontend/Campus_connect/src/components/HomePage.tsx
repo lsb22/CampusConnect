@@ -23,8 +23,9 @@ const HomePage = ({ socket }: Props) => {
   const handleClick = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (username) {
+      socket.username = username;
       socket.connect();
-      localStorage.setItem("username", username);
+      // localStorage.setItem("username", username);
       socket.emit("newUser", { username, socketId: socket.id });
       socket.on("prevMessages", (data) => {
         insert(data);

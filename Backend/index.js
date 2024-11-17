@@ -64,6 +64,8 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     console.log("user disconnected");
+    users.filter((user) => user.socketId !== socket.id);
+    io.emit("newUserLogin", users);
   });
 });
 
