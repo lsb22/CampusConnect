@@ -23,10 +23,9 @@ const HomePage = ({ socket }: Props) => {
   const handleClick = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (username) {
-      socket.username = username;
+      socket.username = username; // Added this custom username property by modifying types file in src folder
       socket.connect();
-      // localStorage.setItem("username", username);
-      socket.emit("newUser", { username, socketId: socket.id });
+      socket.emit("newUser", { username });
       socket.on("prevMessages", (data) => {
         insert(data);
       });

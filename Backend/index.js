@@ -45,10 +45,11 @@ async function fetchMessages() {
 }
 
 io.on("connection", (socket) => {
-  console.log(`user ${socket.id} connected!!!`);
+  const id = socket.id;
+  console.log(`user ${id} connected!!!`);
 
-  socket.on("newUser", (data) => {
-    users.push(data);
+  socket.on("newUser", ({ username }) => {
+    users.push({ username, id });
     fetchMessages()
       .then((res) => {
         socket.emit("prevMessages", res);
@@ -64,7 +65,7 @@ io.on("connection", (socket) => {
 
   socket.on("disconnect", () => {
     console.log("user disconnected");
-    users.filter((user) => user.socketId !== socket.id);
+    users = users.filter((user) => user.id !== id);
     io.emit("newUserLogin", users);
   });
 });
