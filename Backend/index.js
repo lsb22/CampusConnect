@@ -5,14 +5,13 @@ const mongoose = require("mongoose");
 const app = express();
 
 const server = require("http").createServer(app);
-
-app.use(cors());
-
 const io = require("socket.io")(server, {
   cors: {
     origin: "http://localhost:5173",
   },
 });
+
+app.use(cors());
 
 let users = [];
 
@@ -44,8 +43,14 @@ async function fetchMessages() {
   return messages;
 }
 
+// function generateSessionId() {
+//   const randomNumber = Math.floor(Math.random() * 1000000); // Generates a random number
+//   const randomString = Math.random().toString(36).substring(2, 8); // Generates a random string
+//   return `${randomString}${randomNumber}`;
+// }
+
 io.on("connection", (socket) => {
-  const id = socket.id;
+  let id = socket.id;
   console.log(`user ${id} connected!!!`);
 
   socket.on("newUser", ({ username }) => {

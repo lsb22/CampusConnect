@@ -6,6 +6,7 @@ import TypeMessage from "./TypeMessage";
 import { Grid, GridItem, Show } from "@chakra-ui/react";
 import { Socket } from "socket.io-client";
 import useMessageStore from "../store/LatestMessagesStore";
+import { useNavigate } from "react-router-dom";
 
 interface Props {
   socket: Socket;
@@ -16,16 +17,23 @@ export interface MessageStruct {
   userName: string;
   socketId: string;
   id: string;
+  _id?: string;
+  _v?: number;
 }
 
 const ChatPage = ({ socket }: Props) => {
   const [messages, setMessages] = useState<MessageStruct[]>([]);
-  const { messages: LatestMessages } = useMessageStore();
+  const { messages: LatestMessages, isLoggedIn } = useMessageStore();
+  const navigate = useNavigate();
 
   useEffect(() => {
     socket.on("messageResponse", (data: MessageStruct) => {
       setMessages([...messages, data]);
     });
+
+    if (!isLoggedIn) {
+      navigate("/");
+    }
   }, [messages, socket]);
 
   return (

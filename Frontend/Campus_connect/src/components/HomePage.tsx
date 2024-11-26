@@ -7,8 +7,8 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import { Socket } from "socket.io-client";
 import { useNavigate } from "react-router-dom";
+import { Socket } from "socket.io-client";
 import useMessageStore from "../store/LatestMessagesStore";
 
 interface Props {
@@ -18,17 +18,20 @@ interface Props {
 const HomePage = ({ socket }: Props) => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
-  const { insert } = useMessageStore();
+  const { insert, logIn } = useMessageStore();
 
   const handleClick = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (username) {
       socket.username = username; // Added this custom username property by modifying types file in src folder
       socket.connect();
+
       socket.emit("newUser", { username });
+
       socket.on("prevMessages", (data) => {
         insert(data);
       });
+      logIn(true);
       navigate("/chatpage");
     } else alert("Enter valid username!!!");
   };
