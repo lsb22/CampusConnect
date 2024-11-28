@@ -1,7 +1,6 @@
 const cors = require("cors");
 const express = require("express");
 const mongoose = require("mongoose");
-
 const app = express();
 
 const server = require("http").createServer(app);
@@ -39,15 +38,9 @@ async function createMessage(data) {
 }
 
 async function fetchMessages() {
-  const messages = await messageModel.find().sort({ _id: -1 }).limit(10);
+  const messages = await messageModel.find().sort({ _id: -1 });
   return messages;
 }
-
-// function generateSessionId() {
-//   const randomNumber = Math.floor(Math.random() * 1000000); // Generates a random number
-//   const randomString = Math.random().toString(36).substring(2, 8); // Generates a random string
-//   return `${randomString}${randomNumber}`;
-// }
 
 io.on("connection", (socket) => {
   let id = socket.id;

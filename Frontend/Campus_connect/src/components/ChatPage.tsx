@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ChatBody from "./ChatBody";
 import Navbar from "./Navbar";
 import SidePanel from "./SidePanel";
@@ -25,6 +25,7 @@ const ChatPage = ({ socket }: Props) => {
   const [messages, setMessages] = useState<MessageStruct[]>([]);
   const { messages: LatestMessages, isLoggedIn } = useMessageStore();
   const navigate = useNavigate();
+  const lastmessageRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     socket.on("messageResponse", (data: MessageStruct) => {
@@ -34,6 +35,8 @@ const ChatPage = ({ socket }: Props) => {
     if (!isLoggedIn) {
       navigate("/");
     }
+
+    lastmessageRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, socket]);
 
   return (
