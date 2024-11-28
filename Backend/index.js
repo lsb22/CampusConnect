@@ -1,24 +1,28 @@
 const cors = require("cors");
 const express = require("express");
 const mongoose = require("mongoose");
-const app = express();
 
+const app = express();
 const server = require("http").createServer(app);
+
+const corsOptions = {
+  origin: "https://campus-connect-frontend-beta.vercel.app/",
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
+
 const io = require("socket.io")(server, {
   cors: {
     origin: [
       "http://localhost:5173",
       "https://campus-connect-frontend-beta.vercel.app/",
     ],
+    methods: ["GET", "POST"],
+    credentials: true,
   },
 });
-
-const corsOptions = {
-  origin: "https://campus-connect-frontend-beta.vercel.app/",
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-};
-
-app.use(cors(corsOptions));
 
 let users = [];
 const port = process.env.PORT || 3000;
