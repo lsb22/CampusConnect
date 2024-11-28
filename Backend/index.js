@@ -13,6 +13,7 @@ const io = require("socket.io")(server, {
 app.use(cors());
 
 let users = [];
+const port = process.env.PORT || 3000;
 
 // database actions
 
@@ -72,6 +73,6 @@ app.get("/", (req, res) => {
   res.send("welcome to my website");
 });
 
-server.listen(3000, () => {
-  console.log("server is running on 3000");
+server.listen(port, () => {
+  console.log(`server is running on ${port}`);
 });
