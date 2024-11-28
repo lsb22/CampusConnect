@@ -8,7 +8,7 @@ const io = require("socket.io")(server, {
   cors: {
     origin: [
       "http://localhost:5173",
-      "https://campus-connect-fronted.vercel.app/",
+      "https://campus-connect-frontend-beta.vercel.app/",
     ],
   },
 });
