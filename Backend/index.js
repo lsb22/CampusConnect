@@ -13,7 +13,12 @@ const io = require("socket.io")(server, {
   },
 });
 
-app.use(cors());
+const corsOptions = {
+  origin: "https://campus-connect-frontend-beta.vercel.app/",
+  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+};
+
+app.use(cors(corsOptions));
 
 let users = [];
 const port = process.env.PORT || 3000;
