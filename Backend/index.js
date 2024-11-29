@@ -6,7 +6,7 @@ const app = express();
 const server = require("http").createServer(app);
 
 const corsOptions = {
-  origin: "https://campus-connect-frontend-beta.vercel.app/",
+  origin: "https://campus-connect-frontend-beta.vercel.app",
   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
   credentials: true,
 };
@@ -17,7 +17,7 @@ const io = require("socket.io")(server, {
   cors: {
     origin: [
       "http://localhost:5173",
-      "https://campus-connect-frontend-beta.vercel.app/",
+      "https://campus-connect-frontend-beta.vercel.app",
     ],
     methods: ["GET", "POST"],
     credentials: true,
