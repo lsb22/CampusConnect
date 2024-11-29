@@ -7,8 +7,9 @@ const server = require("http").createServer(app);
 
 const corsOptions = {
   origin: "https://campus-connect-frontend-beta.vercel.app",
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+  methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
   credentials: true,
+  allowedHeaders: ["Content-Type", "Authorization"],
 };
 
 app.use(cors(corsOptions));
@@ -21,6 +22,7 @@ const io = require("socket.io")(server, {
     ],
     methods: ["GET", "POST"],
     credentials: true,
+    allowedHeaders: ["Content-Type", "Authorization"],
   },
 });
 
