@@ -51,7 +51,7 @@ const ChatPage = ({ socket }: Props) => {
       height="100vh"
     >
       <GridItem area={"nav"} bg="rgb(6,6,7,0.18)" borderRadius="10px">
-        <Navbar />
+        <Navbar socket={socket} />
       </GridItem>
       <Show above={"lg"}>
         <GridItem area={"sidePanel"} bg="rgb(6,6,7,0.18)" borderRadius="10px">
