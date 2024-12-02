@@ -17,9 +17,9 @@ const Navbar = ({ socket }: Props) => {
   return (
     <Box p={2}>
       <HStack justifyContent="space-between">
-        <Text fontSize="1.1rem">Hangout with the fellow students</Text>
-        <Button colorScheme="red" fontSize="1rem" onClick={handleclick}>
-          Leave Chat
+        <Text className="nav-header">Hangout with the fellow students</Text>
+        <Button colorScheme="red" onClick={handleclick}>
+          <Text className="exit-button-text">Leave Chat</Text>
         </Button>
       </HStack>
     </Box>

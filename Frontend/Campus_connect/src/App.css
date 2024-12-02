@@ -8,3 +8,22 @@
   background-color: green;
   border-radius: 10px;
 }
+
+/* navbar styles */
+
+.exit-button-text {
+  font-size: 20px;
+}
+
+.nav-header {
+  font-size: 1.4rem;
+}
+
+@media (max-width: 600px) {
+  .exit-button-text {
+    font-size: 13px;
+  }
+  .nav-header {
+    font-size: 15px;
+  }
+}
