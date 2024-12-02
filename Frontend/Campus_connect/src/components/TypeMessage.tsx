@@ -25,7 +25,8 @@ const TypeMessage = ({ socket }: Props) => {
   return (
     <form onSubmit={handleMessageSubmit}>
       <Input
-        height="60px"
+        className="message-typer"
+        // height="60px"
         placeholder="Type Message"
         variant="filled"
         value={message}
