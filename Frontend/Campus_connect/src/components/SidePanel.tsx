@@ -1,20 +1,11 @@
 import { VStack, Text, Box, HStack } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import socket from "../services/Socket";
+import { UserStruct } from "./ChatPage";
 
-interface UserStruct {
-  username: string;
-  socketId: string;
+interface Props {
+  users: UserStruct[];
 }
 
-const SidePanel = () => {
-  const [users, setUsers] = useState<UserStruct[]>([]);
-
-  useEffect(() => {
-    socket.on("newUserLogin", (data: UserStruct[]) => {
-      setUsers(data);
-    });
-  }, [users, socket]);
+const SidePanel = ({ users }: Props) => {
   return (
     <VStack alignItems="start" pl={4}>
       <Text fontSize="2rem" mb={5}>

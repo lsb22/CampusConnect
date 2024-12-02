@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import ChatBody from "./ChatBody";
 import Navbar from "./Navbar";
 import SidePanel from "./SidePanel";
@@ -21,22 +21,29 @@ export interface MessageStruct {
   _v?: number;
 }
 
+export interface UserStruct {
+  username: string;
+  socketId: string;
+}
+
 const ChatPage = ({ socket }: Props) => {
   const [messages, setMessages] = useState<MessageStruct[]>([]);
+  const [users, setUsers] = useState<UserStruct[]>([]);
   const { messages: LatestMessages, isLoggedIn } = useMessageStore();
   const navigate = useNavigate();
-  const lastmessageRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     socket.on("messageResponse", (data: MessageStruct) => {
       setMessages([...messages, data]);
     });
 
+    socket.on("newUserLogin", (data: UserStruct[]) => {
+      setUsers(data);
+    });
+
     if (!isLoggedIn) {
       navigate("/");
     }
-
-    lastmessageRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages, socket]);
 
   return (
@@ -51,11 +58,11 @@ const ChatPage = ({ socket }: Props) => {
       height="100vh"
     >
       <GridItem area={"nav"} bg="rgb(6,6,7,0.18)" borderRadius="10px">
-        <Navbar socket={socket} />
+        <Navbar socket={socket} users={users} />
       </GridItem>
       <Show above={"lg"}>
         <GridItem area={"sidePanel"} bg="rgb(6,6,7,0.18)" borderRadius="10px">
-          <SidePanel />
+          <SidePanel users={users} />
         </GridItem>
       </Show>
       <GridItem area={"main"} overflowY="scroll">

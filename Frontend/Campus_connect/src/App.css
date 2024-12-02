@@ -25,7 +25,7 @@ body {
 
 @media (max-width: 600px) {
   .exit-button-text {
-    font-size: 13px;
+    font-size: 11px;
   }
   .nav-header {
     font-size: 15px;
@@ -63,5 +63,17 @@ body {
     position: relative;
     bottom: 4px;
     padding: 20px;
+  }
+}
+
+/* Users Drawer styles */
+
+.show-active-users {
+  font-size: 1rem;
+}
+
+@media (max-width: 600px) {
+  .show-active-users {
+    font-size: 0.8rem;
   }
 }
