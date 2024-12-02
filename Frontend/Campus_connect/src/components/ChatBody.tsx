@@ -22,11 +22,11 @@ const ChatBody = ({ messages, socket }: Props) => {
           <VStack
             alignItems={message.userName === socket.username ? "end" : "start"}
           >
-            <Text p={1}>
+            <Text p={1} className="username">
               {message.userName === socket.username ? "You" : message.userName}
             </Text>
             <Text
-              fontSize="1.3rem"
+              className="message-text"
               bgColor={
                 message.userName === socket.username ? "teal" : "lightcoral"
               }

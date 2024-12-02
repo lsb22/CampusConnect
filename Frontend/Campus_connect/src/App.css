@@ -9,6 +9,10 @@
   border-radius: 10px;
 }
 
+body {
+  overflow-y: hidden;
+}
+
 /* navbar styles */
 
 .exit-button-text {
@@ -25,5 +29,25 @@
   }
   .nav-header {
     font-size: 15px;
+  }
+}
+
+/* chatbody styles */
+
+.message-text {
+  font-size: 1.3rem;
+}
+
+.username {
+  font-size: 1.1rem;
+}
+
+@media (max-width: 600px) {
+  .message-text {
+    font-size: 0.9rem;
+  }
+
+  .username {
+    font-size: 0.9rem;
   }
 }
