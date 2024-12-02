@@ -45,7 +45,7 @@ const ChatPage = ({ socket }: Props) => {
         lg: `"sidePanel nav" "sidePanel main" "sidePanel message"`,
         base: `"nav" "main" "message"`,
       }}
-      templateRows={{ lg: "60px 78vh 60px", base: "60px 78vh 60px" }}
+      templateRows={{ lg: "60px 75vh 60px", base: "60px 75vh 60px" }}
       gap={3}
       p={3}
       height="100vh"
