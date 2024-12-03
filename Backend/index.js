@@ -1,6 +1,7 @@
 const cors = require("cors");
 const express = require("express");
 const mongoose = require("mongoose");
+const { AllowedStudents } = require("./createUsers.js");
 
 const app = express();
 const server = require("http").createServer(app);
@@ -27,6 +28,7 @@ const io = require("socket.io")(server, {
 });
 
 let users = [];
+const studentsReg = ["1JS22IS064", "1JS22IS066", "1JS23IS400"];
 const port = process.env.PORT || 3000;
 
 // database actions
@@ -55,6 +57,13 @@ async function createMessage(data) {
 async function fetchMessages() {
   const messages = await messageModel.find().sort({ _id: -1 });
   return messages;
+}
+
+async function AddEligibleStudents() {
+  const res = await AllowedStudents.insertMany(
+    studentsReg.map((reg) => ({ registrationNumber: reg }))
+  );
+  console.log(res);
 }
 
 io.on("connection", (socket) => {
