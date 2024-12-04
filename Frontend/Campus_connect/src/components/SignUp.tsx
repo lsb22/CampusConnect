@@ -8,8 +8,12 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { z } from "zod";
+import useMessageStore from "../store/LatestMessagesStore";
+import { Socket } from "socket.io-client";
 
 const schema = z.object({
   name: z.string().min(3, { message: "name is required" }),
@@ -19,22 +23,47 @@ const schema = z.object({
     .min(8, { message: "password is required and min length is 8" }),
 });
 
+interface Props {
+  socket: Socket;
+}
+
 type formData = z.infer<typeof schema>;
 
-const SignUp = () => {
+const SignUp = ({ socket }: Props) => {
   const {
     register,
     handleSubmit,
     reset,
     formState: { errors },
   } = useForm<formData>({ resolver: zodResolver(schema) });
+  const navigate = useNavigate();
+  const { logIn, insert } = useMessageStore();
+
+  const signUpUser = (data: formData) => {
+    axios
+      .post("http://localhost:3000/signup", data)
+      .then(() => {
+        socket.username = data.name; // Added this custom username property by modifying types file in src folder
+        socket.connect();
+
+        socket.emit("newUser", { username: data.name });
+
+        socket.on("prevMessages", (d) => {
+          insert(d);
+        });
+        logIn(true);
+        navigate("/chatpage");
+      })
+      .catch((err) => console.log(err.message));
+  };
+
   return (
     <Box>
       <VStack justifyContent="center" height="100vh">
         <Text>CampusConnect</Text>
         <form
           onSubmit={handleSubmit((data) => {
-            console.log(data);
+            signUpUser(data);
             reset();
           })}
         >

@@ -2,18 +2,23 @@ const cors = require("cors");
 const express = require("express");
 const mongoose = require("mongoose");
 const { AllowedStudents } = require("./createUsers.js");
+const { usersCollection } = require("./SignedinUsers.js");
 
 const app = express();
 const server = require("http").createServer(app);
 
 const corsOptions = {
-  origin: "https://campus-connect-frontend-beta.vercel.app",
+  origin: [
+    "https://campus-connect-frontend-beta.vercel.app",
+    "http://localhost:5173",
+  ],
   methods: ["GET", "HEAD", "PUT", "PATCH", "POST", "DELETE"],
   credentials: true,
   allowedHeaders: ["Content-Type", "Authorization"],
 };
 
 app.use(cors(corsOptions));
+app.use(express.json());
 
 const io = require("socket.io")(server, {
   cors: {
@@ -94,6 +99,32 @@ io.on("connection", (socket) => {
 
 app.get("/", (req, res) => {
   res.send("welcome to my website");
+});
+
+app.post("/signup", async (req, res) => {
+  if (!req.body)
+    return res.status(400).json({ message: "Please Enter the details" });
+
+  const { name, usn, password } = req.body;
+  try {
+    const userExist = usersCollection.findOne({ usn });
+    if (userExist) {
+      console.log("user already exist");
+      return res.status(201).json({ message: "User already exist" });
+    }
+    const isAllowed = await AllowedStudents.findOne({
+      registrationNumber: usn,
+    });
+    if (!isAllowed) {
+      return res.status(403).json({ message: "Invalid USN." });
+    }
+    const user = new usersCollection({ name, usn, password });
+    await user.save();
+    return res.status(201).json({ message: "Signup successful" });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Something went wrong" });
+  }
 });
 
 server.listen(port, () => {
