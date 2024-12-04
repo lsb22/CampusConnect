@@ -79,7 +79,7 @@ const SignUp = ({ socket }: Props) => {
           </FormControl>
           <FormControl mb={3}>
             <FormLabel>Password:</FormLabel>
-            <Input type="text" {...register("password")} />
+            <Input type="password" {...register("password")} />
             {errors.password && (
               <Text color="red">{errors.password.message}</Text>
             )}
