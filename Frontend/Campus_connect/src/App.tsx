@@ -4,6 +4,7 @@ import socket from "./services/Socket";
 import HomePage from "./components/HomePage";
 import ChatPage from "./components/ChatPage";
 import { Route, Routes } from "react-router-dom";
+import SignUp from "./components/SignUp";
 
 function App() {
   return (
@@ -11,6 +12,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage socket={socket} />} />
         <Route path="/chatpage" element={<ChatPage socket={socket} />} />
+        <Route path="/signup" element={<SignUp />} />
       </Routes>
     </Box>
   );

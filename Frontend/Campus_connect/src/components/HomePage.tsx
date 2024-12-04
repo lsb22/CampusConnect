@@ -36,6 +36,10 @@ const HomePage = ({ socket }: Props) => {
     } else alert("Enter valid username!!!");
   };
 
+  const handleSignUpClick = () => {
+    navigate("/signup");
+  };
+
   return (
     <VStack justifyContent="center" height="100vh">
       <Box border="1px solid gray" p={10} borderRadius={10}>
@@ -45,6 +49,9 @@ const HomePage = ({ socket }: Props) => {
             <Input onChange={(e) => setUsername(e.target.value)} />
           </FormControl>
           <Button type="submit">Enter chat...</Button>
+          <Button colorScheme="green" onClick={handleSignUpClick} ml={2}>
+            SignUp
+          </Button>
         </form>
       </Box>
     </VStack>
