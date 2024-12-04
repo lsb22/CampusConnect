@@ -28,6 +28,9 @@ interface Props {
 }
 
 type formData = z.infer<typeof schema>;
+const url = import.meta.env.VITE_SOCKET_URL;
+
+console.log(`${url}/signup`);
 
 const SignUp = ({ socket }: Props) => {
   const {
@@ -41,7 +44,7 @@ const SignUp = ({ socket }: Props) => {
 
   const signUpUser = (data: formData) => {
     axios
-      .post("http://localhost:3000/signup", data)
+      .post(`${url}/signup`, data)
       .then(() => {
         socket.username = data.name; // Added this custom username property by modifying types file in src folder
         socket.connect();
