@@ -46,7 +46,7 @@ const ChatPage = ({ socket }: Props) => {
         status: "error",
         duration: 3000,
         isClosable: true,
-        position: "top",
+        position: "bottom",
       });
     });
 
