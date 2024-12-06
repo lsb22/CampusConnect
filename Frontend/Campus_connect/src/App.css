@@ -8,10 +8,10 @@
   background-color: green;
   border-radius: 10px;
 }
-
+/* 
 body {
   overflow-y: hidden;
-}
+} */
 
 /* navbar styles */
 
@@ -58,7 +58,7 @@ body {
   padding: 27px;
 }
 
-@media (max-width: 600px) and (min-width: 361px) {
+/* @media (max-width: 600px) and (min-width: 361px) {
   .message-typer {
     position: relative;
     bottom: 4px;
@@ -73,7 +73,7 @@ body {
     padding: 20px;
     z-index: 1000;
   }
-}
+} */
 
 /* Users Drawer styles */
 

@@ -3,6 +3,11 @@ const express = require("express");
 const mongoose = require("mongoose");
 const { AllowedStudents } = require("./createUsers.js");
 const { usersCollection } = require("./SignedinUsers.js");
+const { google } = require("googleapis");
+
+// perspective apikey -> AIzaSyDgw5ddZkX704fvO_XVjajle4NpOVEnRpc
+
+const gapi = "AIzaSyDgw5ddZkX704fvO_XVjajle4NpOVEnRpc";
 
 const app = express();
 const server = require("http").createServer(app);
@@ -71,6 +76,43 @@ async function AddEligibleStudents() {
   console.log(res);
 }
 
+DISCOVERY_URL =
+  "https://commentanalyzer.googleapis.com/$discovery/rest?version=v1alpha1";
+
+function checkText(text) {
+  return new Promise((resolve, reject) => {
+    google
+      .discoverAPI(DISCOVERY_URL)
+      .then((client) => {
+        const analyzeRequest = {
+          comment: {
+            text: text,
+          },
+          requestedAttributes: {
+            TOXICITY: {},
+          },
+        };
+
+        client.comments.analyze(
+          {
+            key: gapi,
+            resource: analyzeRequest,
+          },
+          (err, response) => {
+            if (err) return reject(err);
+            // console.log(response);
+            const score =
+              response.data.attributeScores.TOXICITY.spanScores[0].score.value;
+            resolve(score);
+          }
+        );
+      })
+      .catch((err) => {
+        reject(err);
+      });
+  });
+}
+
 io.on("connection", (socket) => {
   let id = socket.id;
   console.log(`user ${id} connected!!!`);
@@ -85,9 +127,16 @@ io.on("connection", (socket) => {
     io.emit("newUserLogin", users);
   });
 
-  socket.on("message", (data) => {
-    createMessage(data);
-    io.emit("messageResponse", data);
+  socket.on("message", async (data) => {
+    const res = await checkText(data.text);
+    if (res * 100 >= 70.0) {
+      socket.emit("blocked", {
+        message: "Offensive/rude message",
+      });
+    } else {
+      createMessage(data);
+      io.emit("messageResponse", data);
+    }
   });
 
   socket.on("disconnect", () => {

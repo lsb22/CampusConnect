@@ -3,7 +3,7 @@ import ChatBody from "./ChatBody";
 import Navbar from "./Navbar";
 import SidePanel from "./SidePanel";
 import TypeMessage from "./TypeMessage";
-import { Grid, GridItem, Show } from "@chakra-ui/react";
+import { Grid, GridItem, Show, useToast } from "@chakra-ui/react";
 import { Socket } from "socket.io-client";
 import useMessageStore from "../store/LatestMessagesStore";
 import { useNavigate } from "react-router-dom";
@@ -31,10 +31,23 @@ const ChatPage = ({ socket }: Props) => {
   const [users, setUsers] = useState<UserStruct[]>([]);
   const { messages: LatestMessages, isLoggedIn } = useMessageStore();
   const navigate = useNavigate();
+  const toast = useToast();
 
   useEffect(() => {
     socket.on("messageResponse", (data: MessageStruct) => {
       setMessages([...messages, data]);
+    });
+
+    socket.on("blocked", ({ message }) => {
+      toast({
+        title: message,
+        description:
+          "You can't use offensive languages!. If you repeat it once more, you will be blocked!. Keep that in mind you fool.",
+        status: "error",
+        duration: 1000,
+        isClosable: true,
+        position: "top",
+      });
     });
 
     socket.on("newUserLogin", (data: UserStruct[]) => {
