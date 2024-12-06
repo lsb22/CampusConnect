@@ -42,9 +42,9 @@ const ChatPage = ({ socket }: Props) => {
       toast({
         title: message,
         description:
-          "You can't use offensive languages!. If you repeat it once more, you will be blocked!. Keep that in mind you fool.",
+          "You can't use offensive languages!. If you repeat it once more, you will be blocked!.",
         status: "error",
-        duration: 1000,
+        duration: 3000,
         isClosable: true,
         position: "top",
       });
