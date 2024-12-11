@@ -7,6 +7,10 @@ interface LatestMessages {
   socketId: string;
   text: string;
   _v: number;
+  file?: boolean;
+  mimeType?: string;
+  fileName?: string;
+  body?: File;
 }
 
 interface StoreStruct {

@@ -19,6 +19,10 @@ export interface MessageStruct {
   id: string;
   _id?: string;
   _v?: number;
+  file?: boolean;
+  mimeType?: string;
+  fileName?: string;
+  body?: File;
 }
 
 export interface UserStruct {

@@ -35,6 +35,7 @@ const io = require("socket.io")(server, {
     credentials: true,
     allowedHeaders: ["Content-Type", "Authorization"],
   },
+  maxHttpBufferSize: 1e7,
 });
 
 let users = [];
@@ -128,13 +129,16 @@ io.on("connection", (socket) => {
   });
 
   socket.on("message", async (data) => {
-    const res = await checkText(data.text);
+    let res = 0;
+    if (!data.file) {
+      res = await checkText(data.text);
+    }
     if (res * 100 >= 70.0) {
       socket.emit("blocked", {
         message: "Offensive/rude message",
       });
     } else {
-      createMessage(data);
+      if (!data.file) createMessage(data);
       io.emit("messageResponse", data);
     }
   });
