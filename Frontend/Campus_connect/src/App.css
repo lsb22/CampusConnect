@@ -58,22 +58,11 @@ body {
   padding: 27px;
 }
 
-/* @media (max-width: 600px) and (min-width: 361px) {
+@media (max-width: 500px) {
   .message-typer {
-    position: relative;
-    bottom: 4px;
     padding: 20px;
   }
 }
-
-@media (max-width: 360.88px) {
-  .message-typer {
-    position: relative;
-    bottom: 15px;
-    padding: 20px;
-    z-index: 1000;
-  }
-} */
 
 /* Users Drawer styles */
 

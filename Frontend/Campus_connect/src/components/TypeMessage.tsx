@@ -1,4 +1,4 @@
-import { HStack, Input } from "@chakra-ui/react";
+import { HStack, Input, Show } from "@chakra-ui/react";
 import { useState } from "react";
 import { Socket } from "socket.io-client";
 
@@ -49,26 +49,46 @@ const TypeMessage = ({ socket }: Props) => {
 
   return (
     <form onSubmit={handleMessageSubmit}>
-      <HStack>
+      <Show above="lg">
+        <HStack>
+          <Input
+            display="inline"
+            type="file"
+            width="100px"
+            fontSize="10px"
+            overflowX="scroll"
+            onChange={selectFile}
+            pt={3}
+            pr={40}
+          />
+          <Input
+            className="message-typer"
+            display="inline"
+            placeholder="Type Message"
+            variant="filled"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+          />
+        </HStack>
+      </Show>
+      <Show below="lg">
         <Input
-          display="inline"
           type="file"
-          width="100px"
-          fontSize="10px"
+          width="150px"
+          fontSize="8px"
           overflowX="scroll"
           onChange={selectFile}
           pt={3}
-          pr={40}
+          mb={3}
         />
         <Input
           className="message-typer"
-          display="inline"
           placeholder="Type Message"
           variant="filled"
           value={message}
           onChange={(e) => setMessage(e.target.value)}
         />
-      </HStack>
+      </Show>
     </form>
   );
 };
