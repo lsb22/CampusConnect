@@ -4,6 +4,8 @@ const mongoose = require("mongoose");
 const { AllowedStudents } = require("./createUsers.js");
 const { usersCollection } = require("./SignedinUsers.js");
 const { google } = require("googleapis");
+const { GridFSBucket } = require("mongodb");
+const { Readable } = require("stream");
 
 // perspective apikey -> AIzaSyDgw5ddZkX704fvO_XVjajle4NpOVEnRpc
 
@@ -51,11 +53,20 @@ mongoose
   .then(() => console.log("database connected successfully"))
   .catch((err) => console.log(err));
 
+const connection = mongoose.connection;
+
+let gfsBucket;
+
+connection.once("open", () => {
+  gfsBucket = new GridFSBucket(connection.db);
+});
+
 const messageSchema = new mongoose.Schema({
   userName: String,
   id: String,
   socketId: String,
   text: String,
+  time: Date,
 });
 
 const messageModel = mongoose.model("message", messageSchema);
@@ -63,6 +74,45 @@ const messageModel = mongoose.model("message", messageSchema);
 async function createMessage(data) {
   const newMessage = new messageModel(data);
   const res = await newMessage.save();
+}
+
+async function getAllFiles() {
+  try {
+    const cursor = gfsBucket.find({});
+    const files = await cursor.toArray();
+
+    if (!files || files.length === 0) return;
+
+    const dataArray = [];
+
+    for (const file of files) {
+      const chunks = [];
+      const downloadStream = gfsBucket.openDownloadStream(file._id);
+
+      await new Promise((resolve, reject) => {
+        downloadStream.on("data", (chunk) => chunks.push(chunk));
+        downloadStream.on("end", () => {
+          const buffer = Buffer.concat(chunks);
+          dataArray.push({
+            file: true,
+            body: buffer,
+            fileName: file.filename,
+            mimeType: file.contentType,
+            userName: file.metadata.userName,
+            socketId: file.metadata.socketId,
+            id: file.metadata.id,
+            time: file.metadata.time,
+          });
+          resolve();
+        });
+        downloadStream.on("error", (err) => reject(err));
+      });
+    }
+
+    return dataArray;
+  } catch (error) {
+    console.log("error while retriving files");
+  }
 }
 
 async function fetchMessages() {
@@ -77,7 +127,7 @@ async function AddEligibleStudents() {
   console.log(res);
 }
 
-DISCOVERY_URL =
+const DISCOVERY_URL =
   "https://commentanalyzer.googleapis.com/$discovery/rest?version=v1alpha1";
 
 function checkText(text) {
@@ -101,7 +151,6 @@ function checkText(text) {
           },
           (err, response) => {
             if (err) return reject(err);
-            // console.log(response);
             const score =
               response.data.attributeScores.TOXICITY.spanScores[0].score.value;
             resolve(score);
@@ -120,6 +169,12 @@ io.on("connection", (socket) => {
 
   socket.on("newUser", ({ username }) => {
     users.push({ username, id });
+    getAllFiles()
+      .then((res) => {
+        socket.emit("prevMessages", res);
+      })
+      .catch((err) => console.log(err));
+
     fetchMessages()
       .then((res) => {
         socket.emit("prevMessages", res);
@@ -139,6 +194,32 @@ io.on("connection", (socket) => {
       });
     } else {
       if (!data.file) createMessage(data);
+      else {
+        if (!gfsBucket) return;
+        const readable = new Readable();
+        readable.push(data.body);
+        readable.push(null);
+
+        const metadata = {
+          file: true,
+          userName: data.userName,
+          socketId: data.socketId,
+          id: data.id,
+          time: data.time,
+        };
+
+        const uploadStream = gfsBucket.openUploadStream(data.fileName, {
+          contentType: data.mimeType,
+          metadata: metadata,
+        });
+
+        readable
+          .pipe(uploadStream)
+          .on("error", (err) => console.log("Failed to upload", err))
+          .on("finish", () =>
+            console.log("File uploaded successfully to database")
+          );
+      }
       io.emit("messageResponse", data);
     }
   });

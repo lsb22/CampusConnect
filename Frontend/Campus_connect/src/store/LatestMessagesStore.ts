@@ -5,12 +5,13 @@ interface LatestMessages {
   userName: string;
   id: string;
   socketId: string;
-  text: string;
+  text?: string;
   _v: number;
   file?: boolean;
   mimeType?: string;
   fileName?: string;
   body?: File;
+  time: Date;
 }
 
 interface StoreStruct {
@@ -23,7 +24,7 @@ interface StoreStruct {
 const useMessageStore = create<StoreStruct>((set) => ({
   isLoggedIn: false,
   messages: [],
-  insert: (arr) => set(() => ({ messages: [...arr] })),
+  insert: (arr) => set((state) => ({ messages: [...state.messages, ...arr] })),
   logIn: (flag) => set(() => ({ isLoggedIn: flag })),
 }));
 

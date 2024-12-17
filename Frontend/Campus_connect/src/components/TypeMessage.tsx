@@ -23,6 +23,7 @@ const TypeMessage = ({ socket }: Props) => {
         userName: socket.username,
         socketId: socket.id,
         id: `${socket.id}${Math.random()}`,
+        time: new Date(),
       };
       // setMessage("");
       setFile(undefined);
@@ -33,6 +34,7 @@ const TypeMessage = ({ socket }: Props) => {
         userName: socket.username,
         socketId: socket.id,
         id: `${socket.id}${Math.random()}`,
+        time: new Date(),
       });
     }
     setMessage("");

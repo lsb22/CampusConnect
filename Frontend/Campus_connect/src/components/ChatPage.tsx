@@ -13,7 +13,7 @@ interface Props {
 }
 
 export interface MessageStruct {
-  text: string;
+  text?: string;
   userName: string;
   socketId: string;
   id: string;
@@ -23,6 +23,7 @@ export interface MessageStruct {
   mimeType?: string;
   fileName?: string;
   body?: File;
+  time: Date;
 }
 
 export interface UserStruct {
@@ -37,8 +38,15 @@ const ChatPage = ({ socket }: Props) => {
   const navigate = useNavigate();
   const toast = useToast();
 
+  LatestMessages?.sort((a, b) => {
+    const d1 = new Date(a.time);
+    const d2 = new Date(b.time);
+    return d2.getTime() - d1.getTime();
+  });
+
   useEffect(() => {
     socket.on("messageResponse", (data: MessageStruct) => {
+      // console.log(data);
       setMessages([...messages, data]);
     });
 
