@@ -1,15 +1,14 @@
+require("dotenv").config();
 const cors = require("cors");
 const express = require("express");
 const mongoose = require("mongoose");
-const { AllowedStudents } = require("./createUsers.js");
-const { usersCollection } = require("./SignedinUsers.js");
+const { Readable } = require("stream");
 const { google } = require("googleapis");
 const { GridFSBucket } = require("mongodb");
-const { Readable } = require("stream");
+const { AllowedStudents } = require("./createUsers.js");
+const { usersCollection } = require("./SignedinUsers.js");
 
-// perspective apikey -> AIzaSyDgw5ddZkX704fvO_XVjajle4NpOVEnRpc
-
-const gapi = "AIzaSyDgw5ddZkX704fvO_XVjajle4NpOVEnRpc";
+const gapi = process.env.GOOGLE_PERSPECTIVE_API;
 
 const app = express();
 const server = require("http").createServer(app);
