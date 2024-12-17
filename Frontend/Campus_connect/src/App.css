@@ -75,3 +75,16 @@ body {
     font-size: 0.8rem;
   }
 }
+
+/* chat-images */
+.chat-img {
+  max-width: 500px;
+  max-height: 500px;
+}
+
+@media (max-width: 700px) {
+  .chat-img {
+    max-width: 250px;
+    max-height: 250px;
+  }
+}

@@ -17,15 +17,7 @@ const RenderImage = ({ blob, fileName }: Props) => {
     };
   });
 
-  return (
-    <Image
-      maxWidth="500px"
-      maxHeight="500px"
-      fit="cover"
-      src={img}
-      alt={fileName}
-    />
-  );
+  return <Image className="chat-img" fit="cover" src={img} alt={fileName} />;
 };
 
 export default RenderImage;
