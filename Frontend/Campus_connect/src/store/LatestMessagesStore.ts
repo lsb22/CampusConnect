@@ -24,21 +24,13 @@ interface StoreStruct {
 const useMessageStore = create<StoreStruct>((set) => ({
   isLoggedIn: false,
   messages: [],
-  insert: (arr) => set((state) => ({ messages: [...state.messages, ...arr] })),
+  insert: (arr) =>
+    set((state) => {
+      const set = new Set(state.messages.map((item) => item._id));
+      const newMessages = arr.filter((item) => !set.has(item._id));
+      return { messages: [...state.messages, ...newMessages] };
+    }),
   logIn: (flag) => set(() => ({ isLoggedIn: flag })),
 }));
-
-// const useMessageStore = create<StoreStruct>()(
-//   persist(
-//     (set) => ({
-//       messages: [],
-//       insert: (arr) => set(() => ({ messages: [...arr] })),
-//     }),
-//     {
-//       name: "auth-storage",
-//       partialize: (state) => ({ messages: state.messages }),
-//     }
-//   )
-// );
 
 export default useMessageStore;

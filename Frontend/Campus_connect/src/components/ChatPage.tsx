@@ -35,6 +35,7 @@ const ChatPage = ({ socket }: Props) => {
   const [messages, setMessages] = useState<MessageStruct[]>([]);
   const [users, setUsers] = useState<UserStruct[]>([]);
   const { messages: LatestMessages, isLoggedIn } = useMessageStore();
+  // console.log(LatestMessages);
   const navigate = useNavigate();
   const toast = useToast();
 

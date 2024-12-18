@@ -1,8 +1,8 @@
 import { Box, Button, Hide, HStack, Show, Text } from "@chakra-ui/react";
 import { useNavigate } from "react-router-dom";
 import { Socket } from "socket.io-client";
-import UsersDrawer from "./UsersDrawer";
 import { UserStruct } from "./ChatPage";
+import UsersDrawer from "./UsersDrawer";
 
 interface Props {
   socket: Socket;
