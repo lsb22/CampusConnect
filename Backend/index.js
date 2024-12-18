@@ -7,11 +7,18 @@ const { google } = require("googleapis");
 const { GridFSBucket } = require("mongodb");
 const { AllowedStudents } = require("./createUsers.js");
 const { usersCollection } = require("./SignedinUsers.js");
-
-const gapi = process.env.GOOGLE_PERSPECTIVE_API;
+const { GoogleGenerativeAI } = require("@google/generative-ai");
 
 const app = express();
 const server = require("http").createServer(app);
+
+// const gapi = process.env.GOOGLE_PERSPECTIVE_API;
+const genai = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const model = genai.getGenerativeModel({ model: "gemini-1.5-flash" });
+const chat = model.startChat({
+  history: [],
+  generationConfig: { maxOutputTokens: 500 },
+});
 
 const corsOptions = {
   origin: [
@@ -129,37 +136,44 @@ async function AddEligibleStudents() {
 const DISCOVERY_URL =
   "https://commentanalyzer.googleapis.com/$discovery/rest?version=v1alpha1";
 
-function checkText(text) {
-  return new Promise((resolve, reject) => {
-    google
-      .discoverAPI(DISCOVERY_URL)
-      .then((client) => {
-        const analyzeRequest = {
-          comment: {
-            text: text,
-          },
-          requestedAttributes: {
-            TOXICITY: {},
-          },
-        };
+// function checkText(text) { // --> for perspective api
+//   return new Promise((resolve, reject) => {
+//     google
+//       .discoverAPI(DISCOVERY_URL)
+//       .then((client) => {
+//         const analyzeRequest = {
+//           comment: {
+//             text: text,
+//           },
+//           requestedAttributes: {
+//             TOXICITY: {},
+//           },
+//         };
 
-        client.comments.analyze(
-          {
-            key: gapi,
-            resource: analyzeRequest,
-          },
-          (err, response) => {
-            if (err) return reject(err);
-            const score =
-              response.data.attributeScores.TOXICITY.spanScores[0].score.value;
-            resolve(score);
-          }
-        );
-      })
-      .catch((err) => {
-        reject(err);
-      });
-  });
+//         client.comments.analyze(
+//           {
+//             key: gapi,
+//             resource: analyzeRequest,
+//           },
+//           (err, response) => {
+//             if (err) return reject(err);
+//             const score =
+//               response.data.attributeScores.TOXICITY.spanScores[0].score.value;
+//             resolve(score);
+//           }
+//         );
+//       })
+//       .catch((err) => {
+//         reject(err);
+//       });
+//   });
+// }
+
+async function callModelToCheckText(input) {
+  const res = await chat.sendMessage(input);
+  const response = await res.response;
+  const text = await response.text();
+  return text;
 }
 
 io.on("connection", (socket) => {
@@ -185,7 +199,12 @@ io.on("connection", (socket) => {
   socket.on("message", async (data) => {
     let res = 0;
     if (!data.file) {
-      res = await checkText(data.text);
+      // res = await checkText(data.text); // --> for perspective api
+      const mess =
+        "Rate the given text based on toxicity from 1 to 100. Just return the score. Text: " +
+        data.text;
+      const val = await callModelToCheckText(mess);
+      res = parseInt(val);
     }
     if (res * 100 >= 70.0) {
       socket.emit("blocked", {
