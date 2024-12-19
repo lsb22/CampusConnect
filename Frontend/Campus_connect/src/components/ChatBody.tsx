@@ -1,9 +1,9 @@
-import { Box, Flex, Text, VStack } from "@chakra-ui/react";
+import { Box, Flex, Text, VStack, Image, Button } from "@chakra-ui/react";
 import { MessageStruct } from "./ChatPage";
 import { Socket } from "socket.io-client";
 import RenderImage from "./RenderImage";
 import { useEffect, useRef } from "react";
-
+import arrow from "../assets/images/down-arrows.png";
 interface Props {
   messages: MessageStruct[];
   socket: Socket;
@@ -13,9 +13,9 @@ interface Props {
 const ChatBody = ({ messages, socket, show }: Props) => {
   const ref = useRef<HTMLDivElement>(null);
 
-  // const handleclick = () => {
-  //   if (ref.current) ref.current.scrollIntoView();
-  // };
+  const handleclick = () => {
+    if (ref.current) ref.current.scrollIntoView();
+  };
 
   useEffect(() => {
     if (ref.current) ref.current.scrollIntoView();
@@ -82,6 +82,16 @@ const ChatBody = ({ messages, socket, show }: Props) => {
     <Box overflowY="auto">
       {messages.map(displayMessage)}
       {show && <Box ref={ref}></Box>}
+      {show && (
+        <Button
+          className="arrow-down"
+          position="fixed"
+          bgColor="white"
+          onClick={handleclick}
+        >
+          <Image className="arrow-img" src={arrow} />
+        </Button>
+      )}
 
       {/* {messages.map((message, idx) => (
         <Flex

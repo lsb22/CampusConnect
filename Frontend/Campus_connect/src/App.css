@@ -62,6 +62,16 @@ body {
   background-color: #1a202c;
 }
 
+.arrow-down {
+  bottom: 77px;
+  z-index: 100;
+}
+
+.arrow-img {
+  height: 20px;
+  width: 20px;
+}
+
 @media (max-width: 500px) {
   .message-typer {
     padding: 17px;
@@ -69,6 +79,18 @@ body {
   .message-component {
     position: sticky;
     bottom: 35px;
+  }
+}
+
+@media (max-width: 768px) {
+  .arrow-down {
+    bottom: 100px;
+    z-index: 100;
+  }
+
+  .arrow-img {
+    height: 15px;
+    width: 15px;
   }
 }
 
