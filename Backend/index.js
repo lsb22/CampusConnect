@@ -206,7 +206,7 @@ io.on("connection", (socket) => {
       const val = await callModelToCheckText(mess);
       res = parseInt(val);
     }
-    if (res * 100 >= 70.0) {
+    if (res >= 70.0) {
       socket.emit("blocked", {
         message: "Offensive/rude message",
       });

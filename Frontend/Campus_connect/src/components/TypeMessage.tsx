@@ -1,4 +1,11 @@
-import { HStack, Input, Show } from "@chakra-ui/react";
+import {
+  Button,
+  HStack,
+  Input,
+  InputGroup,
+  InputRightElement,
+  Show,
+} from "@chakra-ui/react";
 import { useState } from "react";
 import { Socket } from "socket.io-client";
 
@@ -61,14 +68,28 @@ const TypeMessage = ({ socket }: Props) => {
             pt={3}
             pr={40}
           />
-          <Input
-            className="message-typer"
-            display="inline"
-            placeholder="Type Message"
-            variant="filled"
-            value={message}
-            onChange={(e) => setMessage(e.target.value)}
-          />
+          <InputGroup size="md">
+            <Input
+              className="message-typer"
+              display="inline"
+              placeholder="Type Message"
+              variant="filled"
+              value={message}
+              onChange={(e) => setMessage(e.target.value)}
+            />
+            <InputRightElement width="4.5rem">
+              <Button
+                type="submit"
+                colorScheme="teal"
+                pt="18px"
+                pr="20px"
+                pl="20px"
+                pb="22px"
+              >
+                Send
+              </Button>
+            </InputRightElement>
+          </InputGroup>
         </HStack>
       </Show>
       <Show below="lg">

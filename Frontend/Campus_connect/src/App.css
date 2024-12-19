@@ -55,7 +55,7 @@ body {
 /* messaging box styles */
 
 .message-typer {
-  padding: 27px;
+  padding: 19px;
 }
 
 @media (max-width: 500px) {
