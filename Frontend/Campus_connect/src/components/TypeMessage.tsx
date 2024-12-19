@@ -102,13 +102,27 @@ const TypeMessage = ({ socket }: Props) => {
           pt={3}
           mb={3}
         />
-        <Input
-          className="message-typer"
-          placeholder="Type Message"
-          variant="filled"
-          value={message}
-          onChange={(e) => setMessage(e.target.value)}
-        />
+        <InputGroup>
+          <Input
+            className="message-typer"
+            placeholder="Type Message"
+            variant="filled"
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+          />
+          <InputRightElement width="4rem">
+            <Button
+              type="submit"
+              colorScheme="teal"
+              pt="15px"
+              pr="20px"
+              pl="20px"
+              pb="20px"
+            >
+              Send
+            </Button>
+          </InputRightElement>
+        </InputGroup>
       </Show>
     </form>
   );
