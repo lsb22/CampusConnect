@@ -58,9 +58,17 @@ body {
   padding: 19px;
 }
 
+.message-component {
+  background-color: #1a202c;
+}
+
 @media (max-width: 500px) {
   .message-typer {
     padding: 17px;
+  }
+  .message-component {
+    position: sticky;
+    bottom: 35px;
   }
 }
 

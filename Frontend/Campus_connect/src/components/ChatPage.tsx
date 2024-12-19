@@ -83,7 +83,14 @@ const ChatPage = ({ socket }: Props) => {
       p={3}
       height="100vh"
     >
-      <GridItem area={"nav"} bg="rgb(6,6,7,0.18)" borderRadius="10px">
+      <GridItem
+        area={"nav"}
+        bg="rgb(6,6,7,0.18)"
+        borderRadius="10px"
+        position="sticky"
+        top={0}
+        zIndex={10}
+      >
         <Navbar socket={socket} users={users} />
       </GridItem>
       <Show above={"lg"}>
@@ -100,7 +107,11 @@ const ChatPage = ({ socket }: Props) => {
         />
         <ChatBody messages={messages} socket={socket} show={true} />
       </GridItem>
-      <GridItem area={"message"} borderRadius="10px">
+      <GridItem
+        area={"message"}
+        borderRadius="10px"
+        className="message-component"
+      >
         <TypeMessage socket={socket} />
       </GridItem>
     </Grid>

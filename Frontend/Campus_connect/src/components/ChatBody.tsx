@@ -13,6 +13,10 @@ interface Props {
 const ChatBody = ({ messages, socket, show }: Props) => {
   const ref = useRef<HTMLDivElement>(null);
 
+  // const handleclick = () => {
+  //   if (ref.current) ref.current.scrollIntoView();
+  // };
+
   useEffect(() => {
     if (ref.current) ref.current.scrollIntoView();
   }, [messages]);
