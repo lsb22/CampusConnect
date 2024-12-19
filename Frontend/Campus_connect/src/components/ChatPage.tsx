@@ -98,7 +98,7 @@ const ChatPage = ({ socket }: Props) => {
           )}
           socket={socket}
         />
-        <ChatBody messages={messages} socket={socket} />
+        <ChatBody messages={messages} socket={socket} show={true} />
       </GridItem>
       <GridItem area={"message"} borderRadius="10px">
         <TypeMessage socket={socket} />

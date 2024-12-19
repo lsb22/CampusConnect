@@ -2,13 +2,21 @@ import { Box, Flex, Text, VStack } from "@chakra-ui/react";
 import { MessageStruct } from "./ChatPage";
 import { Socket } from "socket.io-client";
 import RenderImage from "./RenderImage";
+import { useEffect, useRef } from "react";
 
 interface Props {
   messages: MessageStruct[];
   socket: Socket;
+  show?: boolean;
 }
 
-const ChatBody = ({ messages, socket }: Props) => {
+const ChatBody = ({ messages, socket, show }: Props) => {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (ref.current) ref.current.scrollIntoView();
+  }, [messages]);
+
   const displayMessage = (message: MessageStruct, idx: number) => {
     if (message.file) {
       const blob = new Blob([message.body!], { type: "file" });
@@ -69,6 +77,8 @@ const ChatBody = ({ messages, socket }: Props) => {
   return (
     <Box overflowY="auto">
       {messages.map(displayMessage)}
+      {show && <Box ref={ref}></Box>}
+
       {/* {messages.map((message, idx) => (
         <Flex
           flex="1fr"
