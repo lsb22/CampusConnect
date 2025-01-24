@@ -29,13 +29,14 @@ export interface MessageStruct {
 export interface UserStruct {
   username: string;
   socketId: string;
+  users_latitude: number;
+  users_longitude: number;
 }
 
 const ChatPage = ({ socket }: Props) => {
   const [messages, setMessages] = useState<MessageStruct[]>([]);
   const [users, setUsers] = useState<UserStruct[]>([]);
   const { messages: LatestMessages, isLoggedIn } = useMessageStore();
-  // console.log(LatestMessages);
   const navigate = useNavigate();
   const toast = useToast();
 
@@ -46,12 +47,11 @@ const ChatPage = ({ socket }: Props) => {
   });
 
   useEffect(() => {
-    socket.on("messageResponse", (data: MessageStruct) => {
-      // console.log(data);
+    const handleMessageResponse = (data: MessageStruct) => {
       setMessages([...messages, data]);
-    });
+    };
 
-    socket.on("blocked", ({ message }) => {
+    const hanldeBlockedMessages = ({ message }: { message: string }) => {
       toast({
         title: message,
         description:
@@ -61,15 +61,31 @@ const ChatPage = ({ socket }: Props) => {
         isClosable: true,
         position: "bottom",
       });
-    });
+    };
 
-    socket.on("newUserLogin", (data: UserStruct[]) => {
+    const handleNewUserLogin = (data: UserStruct[]) => {
       setUsers(data);
-    });
+    };
+
+    const handleLocationUpdate = (data: UserStruct[]) => {
+      setUsers(data);
+    };
+
+    socket.on("messageResponse", handleMessageResponse);
+    socket.on("blocked", hanldeBlockedMessages);
+    socket.on("newUserLogin", handleNewUserLogin);
+    socket.on("updatedUserLocation", handleLocationUpdate);
 
     if (!isLoggedIn) {
       navigate("/");
     }
+
+    return () => {
+      socket.off("messageResponse", handleMessageResponse);
+      socket.off("blocked", hanldeBlockedMessages);
+      socket.off("newUserLogin", handleNewUserLogin);
+      socket.off("updatedUserLocation", handleLocationUpdate);
+    };
   }, [messages, socket]);
 
   return (

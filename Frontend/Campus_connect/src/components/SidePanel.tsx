@@ -6,6 +6,7 @@ interface Props {
 }
 
 const SidePanel = ({ users }: Props) => {
+  console.log(users);
   return (
     <VStack alignItems="start" pl={4}>
       <Text fontSize="2rem" mb={5}>

@@ -30,8 +30,6 @@ interface Props {
 type formData = z.infer<typeof schema>;
 const url = import.meta.env.VITE_SOCKET_URL;
 
-console.log(`${url}/signup`);
-
 const SignUp = ({ socket }: Props) => {
   const {
     register,

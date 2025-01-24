@@ -5,8 +5,10 @@ import HomePage from "./components/HomePage";
 import ChatPage from "./components/ChatPage";
 import { Route, Routes } from "react-router-dom";
 import SignUp from "./components/SignUp";
+import getUserLocation from "./services/FetchUserLocation";
 
 function App() {
+  getUserLocation(socket);
   return (
     <Box>
       <Routes>
