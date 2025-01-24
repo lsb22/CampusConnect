@@ -40,6 +40,10 @@ const ChatPage = ({ socket }: Props) => {
   const navigate = useNavigate();
   const toast = useToast();
 
+  const submitRange = (range: number) => {
+    console.log(range);
+  };
+
   LatestMessages?.sort((a, b) => {
     const d1 = new Date(a.time);
     const d2 = new Date(b.time);
@@ -121,7 +125,12 @@ const ChatPage = ({ socket }: Props) => {
           )}
           socket={socket}
         />
-        <ChatBody messages={messages} socket={socket} show={true} />
+        <ChatBody
+          messages={messages}
+          socket={socket}
+          show={true}
+          submitRange={submitRange}
+        />
       </GridItem>
       <GridItem
         area={"message"}

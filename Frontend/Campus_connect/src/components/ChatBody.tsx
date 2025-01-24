@@ -1,4 +1,21 @@
-import { Box, Flex, Text, VStack, Image, Button } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Text,
+  VStack,
+  Image,
+  Button,
+  useDisclosure,
+  Modal,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalCloseButton,
+  ModalBody,
+  FormControl,
+  FormLabel,
+  Input,
+} from "@chakra-ui/react";
 import { MessageStruct } from "./ChatPage";
 import { Socket } from "socket.io-client";
 import RenderImage from "./RenderImage";
@@ -9,10 +26,13 @@ interface Props {
   messages: MessageStruct[];
   socket: Socket;
   show?: boolean;
+  submitRange?: (range: number) => void;
 }
 
-const ChatBody = ({ messages, socket, show }: Props) => {
+const ChatBody = ({ messages, socket, show, submitRange }: Props) => {
   const ref = useRef<HTMLDivElement>(null);
+  const rangeRef = useRef<HTMLInputElement>(null);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const handleclick = () => {
     if (ref.current) ref.current.scrollIntoView();
@@ -79,6 +99,13 @@ const ChatBody = ({ messages, socket, show }: Props) => {
     }
   };
 
+  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (rangeRef.current) {
+      submitRange!(parseInt(rangeRef.current.value));
+    }
+  };
+
   return (
     <Box overflowY="auto">
       {messages.map(displayMessage)}
@@ -93,6 +120,41 @@ const ChatBody = ({ messages, socket, show }: Props) => {
         >
           <Image className="arrow-img" src={arrow} />
         </Button>
+      )}
+      {show && (
+        <Button className="range-setter" position="fixed" onClick={onOpen}>
+          Range
+        </Button>
+      )}
+      {show && (
+        <Modal isOpen={isOpen} onClose={onClose}>
+          <ModalOverlay />
+          <ModalContent>
+            <ModalHeader>Visibility Range</ModalHeader>
+            <ModalCloseButton />
+            <ModalBody>
+              <form onSubmit={handleFormSubmit}>
+                <FormControl>
+                  <FormLabel>Range in KM</FormLabel>
+                  <Input
+                    placeholder="Enter range in kilometers"
+                    ref={rangeRef}
+                  />
+                </FormControl>
+                <Flex justifyContent="end">
+                  <Button
+                    type="submit"
+                    onClick={onClose}
+                    colorScheme="blue"
+                    mt={6}
+                  >
+                    Submit
+                  </Button>
+                </Flex>
+              </form>
+            </ModalBody>
+          </ModalContent>
+        </Modal>
       )}
     </Box>
   );

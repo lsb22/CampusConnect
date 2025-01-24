@@ -38,6 +38,18 @@ body {
   font-size: 1.3rem;
 }
 
+.arrow-down {
+  top: 77px;
+  right: 15px;
+  z-index: 100;
+}
+
+.range-setter {
+  top: 137px;
+  right: 15px;
+  z-index: 100;
+}
+
 .username {
   font-size: 1.1rem;
 }
@@ -52,6 +64,22 @@ body {
   }
 }
 
+@media (max-width: 768px) {
+  .arrow-down {
+    bottom: 100px;
+    z-index: 100;
+  }
+
+  .range-setter {
+    bottom: 80px;
+  }
+
+  .arrow-img {
+    height: 15px;
+    width: 15px;
+  }
+}
+
 /* messaging box styles */
 
 .message-typer {
@@ -60,12 +88,6 @@ body {
 
 .message-component {
   background-color: #1a202c;
-}
-
-.arrow-down {
-  top: 77px;
-  right: 15px;
-  z-index: 100;
 }
 
 .arrow-img {
@@ -80,18 +102,6 @@ body {
   .message-component {
     position: sticky;
     bottom: 35px;
-  }
-}
-
-@media (max-width: 768px) {
-  .arrow-down {
-    bottom: 100px;
-    z-index: 100;
-  }
-
-  .arrow-img {
-    height: 15px;
-    width: 15px;
   }
 }
 
