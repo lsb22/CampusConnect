@@ -138,12 +138,16 @@ const ChatBody = ({
         <Modal isOpen={isOpen} onClose={onClose}>
           <ModalOverlay />
           <ModalContent>
-            <ModalHeader>Visibility Range</ModalHeader>
+            <ModalHeader>
+              <span className="modal-header">Visibility Range</span>
+            </ModalHeader>
             <ModalCloseButton />
             <ModalBody>
               <form onSubmit={handleFormSubmit}>
                 <FormControl>
-                  <FormLabel>Range in KM</FormLabel>
+                  <FormLabel>
+                    <span className="modal-label">Range in KM</span>
+                  </FormLabel>
                   <Input placeholder="Enter the radius" ref={rangeRef} />
                 </FormControl>
                 <Flex justifyContent="end">
@@ -153,7 +157,7 @@ const ChatBody = ({
                     colorScheme="blue"
                     mt={6}
                   >
-                    Submit
+                    <span className="modal-submit-text">Submit</span>
                   </Button>
                 </Flex>
               </form>
