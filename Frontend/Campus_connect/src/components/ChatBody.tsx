@@ -27,9 +27,16 @@ interface Props {
   socket: Socket;
   show?: boolean;
   submitRange?: (range: number) => void;
+  blocked_users: string[];
 }
 
-const ChatBody = ({ messages, socket, show, submitRange }: Props) => {
+const ChatBody = ({
+  messages,
+  socket,
+  show,
+  submitRange,
+  blocked_users,
+}: Props) => {
   const ref = useRef<HTMLDivElement>(null);
   const rangeRef = useRef<HTMLInputElement>(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -43,6 +50,7 @@ const ChatBody = ({ messages, socket, show, submitRange }: Props) => {
   }, [messages]);
 
   const displayMessage = (message: MessageStruct, idx: number) => {
+    if (blocked_users.includes(message.userName)) return null;
     if (message.file) {
       const blob = new Blob([message.body!], { type: "file" });
 
@@ -136,10 +144,7 @@ const ChatBody = ({ messages, socket, show, submitRange }: Props) => {
               <form onSubmit={handleFormSubmit}>
                 <FormControl>
                   <FormLabel>Range in KM</FormLabel>
-                  <Input
-                    placeholder="Enter range in kilometers"
-                    ref={rangeRef}
-                  />
+                  <Input placeholder="Enter the radius" ref={rangeRef} />
                 </FormControl>
                 <Flex justifyContent="end">
                   <Button

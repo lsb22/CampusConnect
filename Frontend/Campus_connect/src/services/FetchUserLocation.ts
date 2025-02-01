@@ -11,7 +11,6 @@ const getUserLocation = (socket: Socket) => {
         let latitude = position.coords.latitude;
         let longitude = position.coords.longitude;
         const username = socket.username ? socket.username : "";
-
         setLocation(latitude, longitude);
         socket.emit("locationUpdate", { latitude, longitude, username });
       },
@@ -20,6 +19,7 @@ const getUserLocation = (socket: Socket) => {
       },
       {
         timeout: 5000,
+        enableHighAccuracy: true,
       }
     );
   };

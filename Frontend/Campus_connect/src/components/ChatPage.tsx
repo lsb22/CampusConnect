@@ -7,6 +7,7 @@ import { Grid, GridItem, Show, useToast } from "@chakra-ui/react";
 import { Socket } from "socket.io-client";
 import useMessageStore from "../store/LatestMessagesStore";
 import { useNavigate } from "react-router-dom";
+import calculateDistance from "../services/CalculateDistance";
 
 interface Props {
   socket: Socket;
@@ -36,12 +37,38 @@ export interface UserStruct {
 const ChatPage = ({ socket }: Props) => {
   const [messages, setMessages] = useState<MessageStruct[]>([]);
   const [users, setUsers] = useState<UserStruct[]>([]);
-  const { messages: LatestMessages, isLoggedIn } = useMessageStore();
+  const [blocked_users, setBlockedUsers] = useState<string[]>([]);
+  const {
+    messages: LatestMessages,
+    isLoggedIn,
+    users_latitude,
+    users_longitude,
+  } = useMessageStore();
   const navigate = useNavigate();
   const toast = useToast();
 
   const submitRange = (range: number) => {
-    console.log(range);
+    setBlockedUsers([]);
+    const arr_blocked: string[] = [];
+    for (const user of users) {
+      if (user.username !== socket.username) {
+        const dist = calculateDistance(
+          users_latitude,
+          users_longitude,
+          user.users_latitude,
+          user.users_longitude
+        );
+        // calculateDistance returns straight line distance (which is like radius
+        // of a circle). It doesn't return road distance.
+        console.log(dist);
+        if (dist > range) {
+          // setBlockedUsers([...blocked_users, user.username])
+          arr_blocked.push(user.username);
+        }
+      }
+    }
+
+    setBlockedUsers(arr_blocked);
   };
 
   LatestMessages?.sort((a, b) => {
@@ -115,7 +142,11 @@ const ChatPage = ({ socket }: Props) => {
       </GridItem>
       <Show above={"lg"}>
         <GridItem area={"sidePanel"} bg="rgb(6,6,7,0.18)" borderRadius="10px">
-          <SidePanel users={users} />
+          <SidePanel
+            users={users.filter(
+              (user) => !blocked_users.includes(user.username)
+            )}
+          />
         </GridItem>
       </Show>
       <GridItem area={"main"} overflowY="scroll">
@@ -124,12 +155,14 @@ const ChatPage = ({ socket }: Props) => {
             (_, idx, arr) => arr[arr.length - idx - 1]
           )}
           socket={socket}
+          blocked_users={blocked_users}
         />
         <ChatBody
           messages={messages}
           socket={socket}
           show={true}
           submitRange={submitRange}
+          blocked_users={blocked_users}
         />
       </GridItem>
       <GridItem
