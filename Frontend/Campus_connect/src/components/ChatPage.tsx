@@ -52,11 +52,13 @@ const ChatPage = ({ socket }: Props) => {
     const arr_blocked: string[] = [];
     for (const user of users) {
       if (user.username !== socket.username) {
-        const dist = calculateDistance(
-          users_latitude,
-          users_longitude,
-          user.users_latitude,
-          user.users_longitude
+        const dist = Math.round(
+          calculateDistance(
+            users_latitude,
+            users_longitude,
+            user.users_latitude,
+            user.users_longitude
+          )
         );
         // calculateDistance returns straight line distance (which is like radius
         // of a circle). It doesn't return road distance.
