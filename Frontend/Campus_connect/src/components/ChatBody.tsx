@@ -1,26 +1,26 @@
 import {
   Box,
-  Flex,
-  Text,
-  VStack,
-  Image,
   Button,
-  useDisclosure,
-  Modal,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalCloseButton,
-  ModalBody,
+  Flex,
   FormControl,
   FormLabel,
+  Image,
   Input,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalHeader,
+  ModalOverlay,
+  Text,
+  useDisclosure,
+  VStack,
 } from "@chakra-ui/react";
-import { MessageStruct } from "./ChatPage";
-import { Socket } from "socket.io-client";
-import RenderImage from "./RenderImage";
 import { useEffect, useRef } from "react";
+import { Socket } from "socket.io-client";
 import arrow from "../assets/images/down-arrows.png";
+import { MessageStruct } from "./ChatPage";
+import RenderImage from "./RenderImage";
 
 interface Props {
   messages: MessageStruct[];
@@ -131,7 +131,7 @@ const ChatBody = ({
       )}
       {show && (
         <Button className="range-setter" position="fixed" onClick={onOpen}>
-          Range
+          <span>Range</span>
         </Button>
       )}
       {show && (

@@ -74,6 +74,10 @@ body {
     bottom: 80px;
   }
 
+  .range-setter span {
+    font-size: 12px;
+  }
+
   .arrow-img {
     height: 15px;
     width: 15px;
