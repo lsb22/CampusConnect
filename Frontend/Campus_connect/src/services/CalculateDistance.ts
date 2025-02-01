@@ -4,8 +4,6 @@ const calculateDistance = (
   lat2: number,
   lon2: number
 ) => {
-  console.log("lat1: " + lat1);
-  console.log("lon1: " + lon1);
   const R = 6371; // Radius of the Earth in km
   const toRadians = (degree: number) => (degree * Math.PI) / 180;
 

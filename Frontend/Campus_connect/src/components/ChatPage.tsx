@@ -60,7 +60,6 @@ const ChatPage = ({ socket }: Props) => {
         );
         // calculateDistance returns straight line distance (which is like radius
         // of a circle). It doesn't return road distance.
-        console.log(dist);
         if (dist > range) {
           // setBlockedUsers([...blocked_users, user.username])
           arr_blocked.push(user.username);
