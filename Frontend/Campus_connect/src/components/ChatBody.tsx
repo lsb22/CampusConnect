@@ -1,21 +1,4 @@
-import {
-  Box,
-  Button,
-  Flex,
-  FormControl,
-  FormLabel,
-  Image,
-  Input,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalHeader,
-  ModalOverlay,
-  Text,
-  useDisclosure,
-  VStack,
-} from "@chakra-ui/react";
+import { Box, Button, Flex, Image, Text, VStack } from "@chakra-ui/react";
 import { useEffect, useRef } from "react";
 import { Socket } from "socket.io-client";
 import arrow from "../assets/images/down-arrows.png";
@@ -26,20 +9,10 @@ interface Props {
   messages: MessageStruct[];
   socket: Socket;
   show?: boolean;
-  submitRange?: (range: number) => void;
-  blocked_users: string[];
 }
 
-const ChatBody = ({
-  messages,
-  socket,
-  show,
-  submitRange,
-  blocked_users,
-}: Props) => {
+const ChatBody = ({ messages, socket, show }: Props) => {
   const ref = useRef<HTMLDivElement>(null);
-  const rangeRef = useRef<HTMLInputElement>(null);
-  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const handleclick = () => {
     if (ref.current) ref.current.scrollIntoView();
@@ -50,7 +23,6 @@ const ChatBody = ({
   }, [messages]);
 
   const displayMessage = (message: MessageStruct, idx: number) => {
-    if (blocked_users.includes(message.userName)) return null;
     if (message.file) {
       const blob = new Blob([message.body!], { type: "file" });
 
@@ -107,13 +79,6 @@ const ChatBody = ({
     }
   };
 
-  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (rangeRef.current) {
-      submitRange!(parseInt(rangeRef.current.value));
-    }
-  };
-
   return (
     <Box overflowY="auto">
       {messages.map(displayMessage)}
@@ -128,42 +93,6 @@ const ChatBody = ({
         >
           <Image className="arrow-img" src={arrow} />
         </Button>
-      )}
-      {show && (
-        <Button className="range-setter" position="fixed" onClick={onOpen}>
-          <span>Range</span>
-        </Button>
-      )}
-      {show && (
-        <Modal isOpen={isOpen} onClose={onClose}>
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>
-              <span className="modal-header">Visibility Range</span>
-            </ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>
-              <form onSubmit={handleFormSubmit}>
-                <FormControl>
-                  <FormLabel>
-                    <span className="modal-label">Range in KM</span>
-                  </FormLabel>
-                  <Input placeholder="Enter the radius" ref={rangeRef} />
-                </FormControl>
-                <Flex justifyContent="end">
-                  <Button
-                    type="submit"
-                    onClick={onClose}
-                    colorScheme="blue"
-                    mt={6}
-                  >
-                    <span className="modal-submit-text">Submit</span>
-                  </Button>
-                </Flex>
-              </form>
-            </ModalBody>
-          </ModalContent>
-        </Modal>
       )}
     </Box>
   );

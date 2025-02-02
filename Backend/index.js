@@ -180,8 +180,8 @@ io.on("connection", (socket) => {
   let id = socket.id;
   console.log(`user ${id} connected!!!`);
 
-  socket.on("newUser", ({ username, users_latitude, users_longitude }) => {
-    users.push({ username, id, users_latitude, users_longitude });
+  socket.on("newUser", ({ username }) => {
+    users.push({ username, id });
     getAllFiles()
       .then((res) => {
         socket.emit("prevMessages", res);
@@ -194,16 +194,6 @@ io.on("connection", (socket) => {
       })
       .catch((err) => console.log(err));
     io.emit("newUserLogin", users);
-  });
-
-  socket.on("locationUpdate", ({ latitude, longitude, username }) => {
-    if (users.length === 0) return;
-    users.map((user) =>
-      user.username === username
-        ? { ...user, users_latitude: latitude, users_longitude: longitude }
-        : user
-    );
-    io.emit("updatedUserLocation", users);
   });
 
   socket.on("message", async (data) => {

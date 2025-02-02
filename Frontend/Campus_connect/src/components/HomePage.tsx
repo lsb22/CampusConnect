@@ -18,7 +18,7 @@ interface Props {
 const HomePage = ({ socket }: Props) => {
   const navigate = useNavigate();
   const [username, setUsername] = useState("");
-  const { insert, logIn, users_latitude, users_longitude } = useMessageStore();
+  const { insert, logIn } = useMessageStore();
 
   const handleClick = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -26,7 +26,7 @@ const HomePage = ({ socket }: Props) => {
       socket.username = username; // Added this custom username property by modifying types file in src folder
       socket.connect();
 
-      socket.emit("newUser", { username, users_latitude, users_longitude });
+      socket.emit("newUser", { username });
 
       socket.on("prevMessages", (data) => {
         insert(data);

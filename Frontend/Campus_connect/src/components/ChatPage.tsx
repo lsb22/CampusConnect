@@ -1,13 +1,12 @@
+import { Grid, GridItem, Show, useToast } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Socket } from "socket.io-client";
+import useMessageStore from "../store/LatestMessagesStore";
 import ChatBody from "./ChatBody";
 import Navbar from "./Navbar";
 import SidePanel from "./SidePanel";
 import TypeMessage from "./TypeMessage";
-import { Grid, GridItem, Show, useToast } from "@chakra-ui/react";
-import { Socket } from "socket.io-client";
-import useMessageStore from "../store/LatestMessagesStore";
-import { useNavigate } from "react-router-dom";
-import calculateDistance from "../services/CalculateDistance";
 
 interface Props {
   socket: Socket;
@@ -30,47 +29,14 @@ export interface MessageStruct {
 export interface UserStruct {
   username: string;
   socketId: string;
-  users_latitude: number;
-  users_longitude: number;
 }
 
 const ChatPage = ({ socket }: Props) => {
   const [messages, setMessages] = useState<MessageStruct[]>([]);
   const [users, setUsers] = useState<UserStruct[]>([]);
-  const [blocked_users, setBlockedUsers] = useState<string[]>([]);
-  const {
-    messages: LatestMessages,
-    isLoggedIn,
-    users_latitude,
-    users_longitude,
-  } = useMessageStore();
+  const { messages: LatestMessages, isLoggedIn } = useMessageStore();
   const navigate = useNavigate();
   const toast = useToast();
-
-  const submitRange = (range: number) => {
-    setBlockedUsers([]);
-    const arr_blocked: string[] = [];
-    for (const user of users) {
-      if (user.username !== socket.username) {
-        const dist = Math.round(
-          calculateDistance(
-            users_latitude,
-            users_longitude,
-            user.users_latitude,
-            user.users_longitude
-          )
-        );
-        // calculateDistance returns straight line distance (which is like radius
-        // of a circle). It doesn't return road distance.
-        if (dist > range) {
-          // setBlockedUsers([...blocked_users, user.username])
-          arr_blocked.push(user.username);
-        }
-      }
-    }
-
-    setBlockedUsers(arr_blocked);
-  };
 
   LatestMessages?.sort((a, b) => {
     const d1 = new Date(a.time);
@@ -99,14 +65,9 @@ const ChatPage = ({ socket }: Props) => {
       setUsers(data);
     };
 
-    const handleLocationUpdate = (data: UserStruct[]) => {
-      setUsers(data);
-    };
-
     socket.on("messageResponse", handleMessageResponse);
     socket.on("blocked", hanldeBlockedMessages);
     socket.on("newUserLogin", handleNewUserLogin);
-    socket.on("updatedUserLocation", handleLocationUpdate);
 
     if (!isLoggedIn) {
       navigate("/");
@@ -116,7 +77,6 @@ const ChatPage = ({ socket }: Props) => {
       socket.off("messageResponse", handleMessageResponse);
       socket.off("blocked", hanldeBlockedMessages);
       socket.off("newUserLogin", handleNewUserLogin);
-      socket.off("updatedUserLocation", handleLocationUpdate);
     };
   }, [messages, socket]);
 
@@ -143,11 +103,7 @@ const ChatPage = ({ socket }: Props) => {
       </GridItem>
       <Show above={"lg"}>
         <GridItem area={"sidePanel"} bg="rgb(6,6,7,0.18)" borderRadius="10px">
-          <SidePanel
-            users={users.filter(
-              (user) => !blocked_users.includes(user.username)
-            )}
-          />
+          <SidePanel users={users} />
         </GridItem>
       </Show>
       <GridItem area={"main"} overflowY="scroll">
@@ -156,15 +112,8 @@ const ChatPage = ({ socket }: Props) => {
             (_, idx, arr) => arr[arr.length - idx - 1]
           )}
           socket={socket}
-          blocked_users={blocked_users}
         />
-        <ChatBody
-          messages={messages}
-          socket={socket}
-          show={true}
-          submitRange={submitRange}
-          blocked_users={blocked_users}
-        />
+        <ChatBody messages={messages} socket={socket} show={true} />
       </GridItem>
       <GridItem
         area={"message"}
